@@ -11,3 +11,4 @@ android/.gradle/
 .qa_doc/
 .idea/
 *.iml
+~$*.docx
