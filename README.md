@@ -1,43 +1,42 @@
 # ConectaCruz
 
-Actividad de Aplicaciones Móviles I. El proyecto implementa una primera pantalla Flutter para un catálogo de churrasquería en Santa Cruz de la Sierra.
+Actividad de Aplicaciones Móviles I. Aplicación Flutter para el catálogo, consultas y reservas de la churrasquería Brasas del Oriente en Santa Cruz de la Sierra.
 
 ## Requisitos funcionales implementados
 
-- `MaterialApp` y `Scaffold`.
-- Título visible **ConectaCruz**.
-- Botón exacto **Ver negocios**.
-- Navegación a un catálogo breve de negocios destacados.
-- Prueba de widget para la navegación.
+- Material 3, tema centralizado y navegación entre pantallas.
+- Catálogo filtrable con `ListView.builder` y tarjetas reutilizables.
+- Formularios de consulta y reserva con validaciones.
+- Integración preparada para Supabase: datos remotos, RLS y scripts SQL.
+- Pruebas de navegación y validadores.
 
-No se incluyen pedidos, reservas, autenticación ni backend.
+No se incluyen pagos, autenticación ni pedidos.
 
 ## Ejecución
 
-Desde esta carpeta, cuando Flutter no esté bloqueado:
+Primero ejecuta en Supabase, desde SQL Editor, los scripts de la carpeta `supabase/` en el orden indicado en su README. Luego ejecuta:
 
 ```powershell
-flutter create --platforms=android .
 flutter pub get
 dart format lib test
 flutter analyze
 flutter test
-flutter doctor -v
-flutter devices
-flutter emulators
-flutter run
+flutter run --dart-define=SUPABASE_URL=https://xsvuuxvwwfyhazofuull.supabase.co --dart-define=SUPABASE_PUBLISHABLE_KEY=TU_CLAVE_PUBLICA
 ```
+
+La clave pública se entrega al comando; no se guarda en el proyecto. Nunca uses una clave secreta o `service_role` en Flutter ni la subas a GitHub.
+
+## Diagnóstico en otra computadora
+
+Ejecuta `herramientas\verificar_entorno_flutter.bat` con doble clic o desde CMD. No instala ni modifica nada: informa si faltan Git, Java, Flutter, Android Studio o un emulador.
 
 ## Entregables
 
-- Código: `lib/main.dart`
-- Prueba: `test/widget_test.dart`
-- Informe IMRyD editable: `informe/informe_imryd.md`
-- Informe IMRyD PDF: `informe/informe_imryd.pdf`
-- Presentación de seis diapositivas: `presentacion/presentacion_defensa.html`
-- Guion de defensa: `presentacion/guion_defensa.md`
-- Diagnóstico de entorno: `evidencias/diagnostico_entorno.md`
+- Código Flutter: `lib/`
+- Pruebas: `test/`
+- Scripts SQL: `supabase/`
+- Evidencias: `evidencias/`
 
 ## Estado de evidencias
 
-La carpeta empezó vacía. El análisis y la prueba automatizada se ejecutaron correctamente. Sigue pendiente la captura real en Android porque no hay un emulador configurado y el JDK detectado por Flutter no es válido. Los resultados están en `evidencias/resultado_validaciones.md`.
+La conexión real, la ejecución de scripts SQL y las capturas de Supabase deben verificarse antes de entregar.

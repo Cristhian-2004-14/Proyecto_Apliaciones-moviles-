@@ -1,11 +1,11 @@
-import 'package:conectacruz/main.dart';
+import 'package:conectacruz/app.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('la bienvenida lleva al inicio de la churrasquería', (
     tester,
   ) async {
-    await tester.pumpWidget(const ConectaCruzApp());
+    await tester.pumpWidget(const BrasasDelOrienteApp());
     expect(find.text('Brasas del Oriente'), findsOneWidget);
     await tester.tap(find.text('Entrar a la churrasquería'));
     await tester.pumpAndSettle();

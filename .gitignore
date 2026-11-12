@@ -12,3 +12,13 @@ android/.gradle/
 .idea/
 *.iml
 ~$*.docx
+
+# Archivos temporales de generación y diagnóstico local
+.analysis-output.txt
+content.ndjson
+.pptx-build/
+.codex-finalizer/
+
+# Solo se conserva en Git la versión final de la presentación.
+/entregables/*
+!/entregables/Taller_Actividad_02_Brasas_del_Oriente_completado.pptx
