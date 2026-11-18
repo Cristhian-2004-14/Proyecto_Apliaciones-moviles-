@@ -1,42 +1,32 @@
-# ConectaCruz
+# Traspaso: Laboratorios 12 y 13
 
-Actividad de Aplicaciones Móviles I. Aplicación Flutter para el catálogo, consultas y reservas de la churrasquería Brasas del Oriente en Santa Cruz de la Sierra.
+Esta carpeta contiene la integración de servicios externos adaptada a
+**Brasas del Oriente**.
 
-## Requisitos funcionales implementados
+## Laboratorio 12: API del clima
 
-- Material 3, tema centralizado y navegación entre pantallas.
-- Catálogo filtrable con `ListView.builder` y tarjetas reutilizables.
-- Formularios de consulta y reserva con validaciones.
-- Integración preparada para Supabase: datos remotos, RLS y scripts SQL.
-- Pruebas de navegación y validadores.
+- `Clima.fromJson` convierte la respuesta de Open-Meteo en un modelo tipado.
+- `ClimaService` usa HTTPS GET, límite de 10 segundos y manejo de errores.
+- `ClimaCard` muestra carga, clima actual, error y reintento.
+- No requiere clave privada.
 
-No se incluyen pagos, autenticación ni pedidos.
+## Laboratorio 13: contacto y mapa
 
-## Ejecución
+- Botones Llamar, WhatsApp y Cómo llegar mediante `url_launcher`.
+- Mapa integrado con OpenStreetMap y atribución visible.
+- Consultas de Android para `tel`, `https` y `geo`.
+- Coordenadas de Brasas del Oriente en `06_ubicacion.sql`.
 
-Primero ejecuta en Supabase, desde SQL Editor, los scripts de la carpeta `supabase/` en el orden indicado en su README. Luego ejecuta:
+## Integración recomendada
 
-```powershell
-flutter pub get
-dart format lib test
-flutter analyze
-flutter test
-flutter run --dart-define=SUPABASE_URL=https://xsvuuxvwwfyhazofuull.supabase.co --dart-define=SUPABASE_PUBLISHABLE_KEY=TU_CLAVE_PUBLICA
-```
+1. Copiar los archivos manteniendo sus rutas dentro del proyecto Flutter.
+2. Ejecutar `flutter pub get` para instalar `http`, `flutter_map` y `latlong2`.
+3. Ejecutar `supabase/06_ubicacion.sql` en Supabase SQL Editor.
+4. Ejecutar la app con las variables públicas de Supabase.
+5. Probar clima con y sin conexión, llamada, WhatsApp, ruta y mapa en teléfono real.
 
-La clave pública se entrega al comando; no se guarda en el proyecto. Nunca uses una clave secreta o `service_role` en Flutter ni la subas a GitHub.
+## No incluido
 
-## Diagnóstico en otra computadora
-
-Ejecuta `herramientas\verificar_entorno_flutter.bat` con doble clic o desde CMD. No instala ni modifica nada: informa si faltan Git, Java, Flutter, Android Studio o un emulador.
-
-## Entregables
-
-- Código Flutter: `lib/`
-- Pruebas: `test/`
-- Scripts SQL: `supabase/`
-- Evidencias: `evidencias/`
-
-## Estado de evidencias
-
-La conexión real, la ejecución de scripts SQL y las capturas de Supabase deben verificarse antes de entregar.
+- Claves de Google Maps o de Supabase.
+- Archivos de compilación.
+- Envío de pedidos por WhatsApp: se agregará cuando el equipo decida integrarlo.

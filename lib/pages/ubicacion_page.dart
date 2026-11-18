@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../core/app_colors.dart';
+import '../core/negocio_info.dart';
+import '../widgets/clima_card.dart';
 import '../widgets/info_card.dart';
+import 'mapa_page.dart';
 
 class UbicacionPage extends StatelessWidget {
   const UbicacionPage({super.key});
-
-  static const _address = 'Av. Ejemplo 123, Santa Cruz de la Sierra, Bolivia';
 
   Future<void> _open(BuildContext context, String url) async {
     if (!await launchUrl(
@@ -33,26 +34,28 @@ class UbicacionPage extends StatelessWidget {
         const SizedBox(height: 10),
         const Center(
           child: Text(
-            'Brasas del Oriente',
+            NegocioInfo.nombre,
             style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(height: 24),
         const InfoCard(
           icon: Icons.place,
-          title: 'Dirección demostrativa',
-          text: _address,
+          title: 'Ubicación',
+          text: NegocioInfo.direccion,
         ),
         const InfoCard(
           icon: Icons.schedule,
-          title: 'Horarios demostrativos',
+          title: 'Horarios',
           text: 'Lunes a domingo\n12:00 a 15:30 y 18:30 a 23:00',
         ),
         const InfoCard(
           icon: Icons.phone,
-          title: 'Contacto demostrativo',
-          text: '+591 70000000',
+          title: 'Contacto',
+          text: '+591 ${NegocioInfo.telefono}',
         ),
+        const SizedBox(height: 14),
+        const ClimaCard(),
         const SizedBox(height: 14),
         FilledButton.icon(
           style: FilledButton.styleFrom(
@@ -61,7 +64,7 @@ class UbicacionPage extends StatelessWidget {
           ),
           onPressed: () => _open(
             context,
-            'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(_address)}',
+            'https://www.google.com/maps/search/?api=1&query=${NegocioInfo.latitud},${NegocioInfo.longitud}',
           ),
           icon: const Icon(Icons.directions),
           label: const Text('Cómo llegar'),
@@ -71,12 +74,33 @@ class UbicacionPage extends StatelessWidget {
           style: OutlinedButton.styleFrom(
             minimumSize: const Size.fromHeight(52),
           ),
+          onPressed: () => _open(context, 'tel:+591${NegocioInfo.telefono}'),
+          icon: const Icon(Icons.phone),
+          label: const Text('Llamar'),
+        ),
+        const SizedBox(height: 10),
+        OutlinedButton.icon(
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size.fromHeight(52),
+          ),
           onPressed: () => _open(
             context,
-            'https://wa.me/59170000000?text=${Uri.encodeComponent('Hola, quisiera consultar sobre Brasas del Oriente.')}',
+            'https://wa.me/${NegocioInfo.whatsapp}?text=${Uri.encodeComponent('Hola, quisiera consultar sobre ${NegocioInfo.nombre}.')}',
           ),
           icon: const Icon(Icons.chat),
           label: const Text('Contactar por WhatsApp'),
+        ),
+        const SizedBox(height: 10),
+        OutlinedButton.icon(
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size.fromHeight(52),
+          ),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const MapaPage()),
+          ),
+          icon: const Icon(Icons.map_outlined),
+          label: const Text('Ver mapa'),
         ),
       ],
     ),
