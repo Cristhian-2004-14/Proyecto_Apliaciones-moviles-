@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
+import '../services/carrito_controller.dart';
 import '../widgets/access_card.dart';
+import 'carrito_page.dart';
+import 'cuenta_page.dart';
 import 'catalogo_page.dart';
 import 'consulta_page.dart';
 import 'reserva_page.dart';
 import 'ubicacion_page.dart';
 
 class InicioPage extends StatelessWidget {
-  const InicioPage({super.key});
+  const InicioPage({super.key, required this.carrito});
+
+  final CarritoController carrito;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -29,7 +34,19 @@ class InicioPage extends StatelessWidget {
             icon: Icons.menu_book_rounded,
             title: 'Ver menú',
             subtitle: 'Parrilladas, cortes y más',
-            onTap: () => _go(context, const CatalogoPage()),
+            onTap: () => _go(context, CatalogoPage(carrito: carrito)),
+          ),
+          AccessCard(
+            icon: Icons.shopping_cart_outlined,
+            title: 'Mi pedido',
+            subtitle: 'Revisa productos y confirma tu orden',
+            onTap: () => _go(context, CarritoPage(carrito: carrito)),
+          ),
+          AccessCard(
+            icon: Icons.account_circle_outlined,
+            title: 'Mi cuenta',
+            subtitle: 'Ingresa como cliente o dueño',
+            onTap: () => _go(context, const CuentaPage()),
           ),
           AccessCard(
             icon: Icons.calendar_month_rounded,

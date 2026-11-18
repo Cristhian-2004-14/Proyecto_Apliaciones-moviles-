@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../config/supabase_config.dart';
 import '../models/negocio.dart';
+import '../services/carrito_controller.dart';
 import '../services/negocio_service.dart';
 import '../widgets/negocio_card.dart';
+import 'carrito_page.dart';
 
 class CatalogoPage extends StatefulWidget {
-  const CatalogoPage({super.key});
+  const CatalogoPage({super.key, required this.carrito});
+
+  final CarritoController carrito;
 
   @override
   State<CatalogoPage> createState() => _CatalogoPageState();
@@ -29,7 +33,28 @@ class _CatalogoPageState extends State<CatalogoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Menú digital')),
+      appBar: AppBar(
+        title: const Text('Menú digital'),
+        actions: [
+          AnimatedBuilder(
+            animation: widget.carrito,
+            builder: (context, _) => IconButton(
+              tooltip: 'Ver pedido',
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => CarritoPage(carrito: widget.carrito),
+                ),
+              ),
+              icon: Badge(
+                isLabelVisible: widget.carrito.cantidadTotal > 0,
+                label: Text('${widget.carrito.cantidadTotal}'),
+                child: const Icon(Icons.shopping_cart_outlined),
+              ),
+            ),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Expanded(
@@ -133,8 +158,19 @@ class _CatalogoPageState extends State<CatalogoPage> {
                           : ListView.builder(
                               padding: const EdgeInsets.all(16),
                               itemCount: items.length,
-                              itemBuilder: (_, index) =>
-                                  NegocioCard(negocio: items[index]),
+                              itemBuilder: (_, index) => NegocioCard(
+                                negocio: items[index],
+                                onAdd: () {
+                                  widget.carrito.agregar(items[index]);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        '${items[index].nombre} agregado al pedido.',
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                     ),
                   ],

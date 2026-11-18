@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
+import '../services/carrito_controller.dart';
 import 'inicio_page.dart';
 
 class BienvenidaPage extends StatelessWidget {
-  const BienvenidaPage({super.key});
+  const BienvenidaPage({super.key, required this.carrito});
+
+  final CarritoController carrito;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -37,7 +40,9 @@ class BienvenidaPage extends StatelessWidget {
                 ),
                 onPressed: () => Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => const InicioPage()),
+                  MaterialPageRoute(
+                    builder: (_) => InicioPage(carrito: carrito),
+                  ),
                 ),
                 icon: const Icon(Icons.restaurant_menu),
                 label: const Text('Entrar a la churrasquería'),
