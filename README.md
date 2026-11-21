@@ -7,14 +7,17 @@ Actividad de Aplicaciones Móviles I. Aplicación Flutter para el catálogo, con
 - Material 3, tema centralizado y navegación entre pantallas.
 - Catálogo filtrable con `ListView.builder` y tarjetas reutilizables.
 - Formularios de consulta y reserva con validaciones.
-- Integración preparada para Supabase: datos remotos, RLS y scripts SQL.
-- Pruebas de navegación y validadores.
+- Integración con Supabase: datos remotos, RLS y scripts SQL.
+- Carrito, creación de pedidos y detalle de productos mediante la función `crear_pedido`.
+- Autenticación con cuentas de cliente y dueño; el dueño accede al panel de pedidos.
+- Ubicación, clima de Santa Cruz con Open-Meteo, llamadas, WhatsApp, rutas y mapa OpenStreetMap.
+- Pruebas de carrito, clima, navegación y validadores.
 
-No se incluyen pagos, autenticación ni pedidos.
+La siguiente etapa (Actividad 4) incorporará foto del negocio en Supabase Storage y búsqueda por voz.
 
 ## Ejecución
 
-Primero ejecuta en Supabase, desde SQL Editor, los scripts de la carpeta `supabase/` en el orden indicado en su README. Luego ejecuta:
+Primero ejecuta en Supabase, desde SQL Editor, los scripts de la carpeta `supabase/` en el orden indicado en su README. Para contar con pedidos, cuentas, clima y ubicación ejecuta también `04_pedidos.sql`, `05_cuentas_roles.sql` y `06_ubicacion.sql`. Luego ejecuta:
 
 ```powershell
 flutter pub get
@@ -36,6 +39,7 @@ Ejecuta `herramientas\verificar_entorno_flutter.bat` con doble clic o desde CMD.
 - Pruebas: `test/`
 - Scripts SQL: `supabase/`
 - Evidencias: `evidencias/`
+- Presentación final del video de Actividad 3: `entregables/Presentacion_video_Brasas_del_Oriente_Actividad_3_mejorada_final.pptx`
 
 ## Estado de evidencias
 

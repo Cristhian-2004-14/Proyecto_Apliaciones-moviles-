@@ -9,6 +9,16 @@ android/.gradle/
 .tooling_localappdata/
 .qa_pdf/
 .qa_doc/
+.build-presentacion-avance/
+.chart-data-*/
+.codex-finalizer-video/
+.pptx-build-video/
+.qa_informe_*/
+.qa_pdf/
+.qa_powerpoint_adj/
+.qa_presentacion_original/
+node_modules/
+handoff/
 .idea/
 *.iml
 ~$*.docx
@@ -22,3 +32,4 @@ content.ndjson
 # Solo se conserva en Git la versión final de la presentación.
 /entregables/*
 !/entregables/Taller_Actividad_02_Brasas_del_Oriente_completado.pptx
+!/entregables/Presentacion_video_Brasas_del_Oriente_Actividad_3_mejorada_final.pptx

@@ -1,0 +1,10 @@
+import fs from 'node:fs/promises';
+import { PresentationFile, FileBlob } from 'file:///C:/Users/Usuario/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/@oai/artifact-tool/dist/artifact_tool.mjs';
+const base = 'C:/Users/Usuario/Desktop/actividad_1';
+const deck = await PresentationFile.importPptx(await FileBlob.load(`${base}/entregables/Presentacion_avance_Brasas_del_Oriente.pptx`));
+const out = `${base}/.build-presentacion-avance/final-renders`;
+await fs.mkdir(out,{recursive:true});
+const pages = await deck.render();
+for (const [index, page] of pages.entries()) await fs.writeFile(`${out}/slide-${index+1}.png`,new Uint8Array(await page.arrayBuffer()));
+await fs.writeFile(`${out}/montage.webp`,new Uint8Array(await (await deck.export({format:'webp',montage:true,scale:1})).arrayBuffer()));
+console.log(`${pages.length} renders written`);

@@ -4,9 +4,10 @@ import '../core/app_colors.dart';
 import '../models/negocio.dart';
 
 class NegocioCard extends StatelessWidget {
-  const NegocioCard({super.key, required this.negocio});
+  const NegocioCard({super.key, required this.negocio, required this.onAdd});
 
   final Negocio negocio;
+  final VoidCallback onAdd;
 
   @override
   Widget build(BuildContext context) => Card(
@@ -23,12 +24,22 @@ class NegocioCard extends StatelessWidget {
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: Text(negocio.descripcion),
-      trailing: Text(
-        'Bs. ${negocio.precio.toStringAsFixed(0)}',
-        style: const TextStyle(
-          color: AppColors.brand,
-          fontWeight: FontWeight.bold,
-        ),
+      trailing: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Bs. ${negocio.precio.toStringAsFixed(0)}',
+            style: const TextStyle(
+              color: AppColors.brand,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          IconButton(
+            tooltip: 'Agregar al pedido',
+            onPressed: onAdd,
+            icon: const Icon(Icons.add_circle, color: AppColors.brand),
+          ),
+        ],
       ),
     ),
   );
