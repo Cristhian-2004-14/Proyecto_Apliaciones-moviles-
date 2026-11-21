@@ -1,6 +1,6 @@
-# ConectaCruz
+# ConectaCruz — Brasas del Oriente
 
-Actividad de Aplicaciones Móviles I. Aplicación Flutter para el catálogo, consultas y reservas de la churrasquería Brasas del Oriente en Santa Cruz de la Sierra.
+Actividad de Aplicaciones Móviles I. Aplicación Flutter para el catálogo, consultas, reservas y pedidos de la churrasquería Brasas del Oriente en Santa Cruz de la Sierra.
 
 ## Requisitos funcionales implementados
 
@@ -24,7 +24,7 @@ flutter pub get
 dart format lib test
 flutter analyze
 flutter test
-flutter run --dart-define=SUPABASE_URL=https://xsvuuxvwwfyhazofuull.supabase.co --dart-define=SUPABASE_PUBLISHABLE_KEY=TU_CLAVE_PUBLICA
+flutter run --dart-define=SUPABASE_URL=https://TU_PROYECTO.supabase.co --dart-define=SUPABASE_PUBLISHABLE_KEY=TU_CLAVE_PUBLICA
 ```
 
 La clave pública se entrega al comando; no se guarda en el proyecto. Nunca uses una clave secreta o `service_role` en Flutter ni la subas a GitHub.
