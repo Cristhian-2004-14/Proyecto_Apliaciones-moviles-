@@ -5,7 +5,9 @@ import '../core/validators.dart';
 import '../models/perfil.dart';
 import '../services/auth_service.dart';
 import 'foto_negocio_page.dart';
+import 'configuracion_qr_page.dart';
 import 'panel_pedidos_page.dart';
+import 'verificacion_pagos_page.dart';
 
 class CuentaPage extends StatefulWidget {
   const CuentaPage({super.key});
@@ -197,6 +199,28 @@ class _CuentaPageState extends State<CuentaPage> {
                 ),
                 icon: const Icon(Icons.photo_camera_back_outlined),
                 label: const Text('Cambiar foto'),
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const ConfiguracionQrPage(),
+                  ),
+                ),
+                icon: const Icon(Icons.qr_code_2_outlined),
+                label: const Text('Configurar QR de pagos'),
+              ),
+              const SizedBox(height: 10),
+              FilledButton.icon(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const VerificacionPagosPage(),
+                  ),
+                ),
+                icon: const Icon(Icons.verified_user_outlined),
+                label: const Text('Verificación de pagos'),
               ),
             ],
             const SizedBox(height: 10),

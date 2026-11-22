@@ -4,6 +4,9 @@ import '../config/supabase_config.dart';
 import '../core/validators.dart';
 import '../services/carrito_controller.dart';
 import '../services/pedido_service.dart';
+import '../services/auth_service.dart';
+import 'cuenta_page.dart';
+import 'pago_page.dart';
 
 class PedidoPage extends StatefulWidget {
   const PedidoPage({super.key, required this.carrito});
@@ -38,6 +41,34 @@ class _PedidoPageState extends State<PedidoPage> {
       );
       return;
     }
+    if (AuthService().usuarioActual == null) {
+      final goToAccount = await showDialog<bool>(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Inicia sesión para pagar'),
+          content: const Text(
+            'La sesión permite asociar y proteger tu comprobante de pago.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancelar'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Ir a Mi cuenta'),
+            ),
+          ],
+        ),
+      );
+      if (goToAccount == true && mounted) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const CuentaPage()),
+        );
+      }
+      return;
+    }
 
     setState(() => _enviando = true);
     try {
@@ -48,20 +79,10 @@ class _PedidoPageState extends State<PedidoPage> {
       );
       if (!mounted) return;
       widget.carrito.limpiar();
-      await showDialog<void>(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text('Pedido registrado'),
-          content: Text('Tu pedido N.º $pedidoId fue enviado al restaurante.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cerrar'),
-            ),
-          ],
-        ),
+      await Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => PagoPage(pedidoId: pedidoId)),
       );
-      if (mounted) Navigator.pop(context);
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

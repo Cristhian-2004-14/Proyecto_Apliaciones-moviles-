@@ -14,10 +14,11 @@ Actividad de Aplicaciones Móviles I. Aplicación Flutter para el catálogo, con
 - Pruebas de carrito, clima, navegación y validadores.
 
 - Actividad 4: foto de portada en Supabase Storage, actualización exclusiva del dueño y búsqueda por voz en el catálogo.
+- Extra: QR bancario configurable, comprobantes privados, OCR local y constatación manual del dueño.
 
 ## Ejecución
 
-Primero ejecuta en Supabase, desde SQL Editor, los scripts de la carpeta `supabase/` en el orden indicado en su README. Para contar con pedidos, cuentas, clima y ubicación ejecuta también `04_pedidos.sql`, `05_cuentas_roles.sql` y `06_ubicacion.sql`. Para Actividad 4 ejecuta después `07_storage_negocio.sql`. Luego ejecuta:
+Primero ejecuta en Supabase, desde SQL Editor, los scripts de la carpeta `supabase/` en el orden indicado en su README. Para contar con pedidos, cuentas, clima y ubicación ejecuta también `04_pedidos.sql`, `05_cuentas_roles.sql` y `06_ubicacion.sql`. Para Actividad 4 ejecuta después `07_storage_negocio.sql`. Para el extra de pagos QR, finalmente ejecuta `08_pagos_qr.sql`. Luego ejecuta:
 
 ```powershell
 flutter pub get
@@ -28,6 +29,10 @@ flutter run --dart-define=SUPABASE_URL=https://TU_PROYECTO.supabase.co --dart-de
 ```
 
 La clave pública se entrega al comando; no se guarda en el proyecto. Nunca uses una clave secreta o `service_role` en Flutter ni la subas a GitHub.
+
+## QR y comprobantes
+
+El dueño inicia sesión y usa **Mi cuenta → Configurar QR de pagos** para cargar una imagen QR real y autorizada, además de los datos de validación del beneficiario. Esos datos se almacenan en Supabase y no están escritos en el código. El cliente debe iniciar sesión para asociar su comprobante privado con el pedido. El OCR funciona localmente en Android como apoyo documental; únicamente el dueño puede constatar un abono real y cambiar un pago a `PAGADO`.
 
 ## Diagnóstico en otra computadora
 
