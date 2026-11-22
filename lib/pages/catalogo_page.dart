@@ -4,6 +4,7 @@ import '../config/supabase_config.dart';
 import '../models/negocio.dart';
 import '../services/carrito_controller.dart';
 import '../services/negocio_service.dart';
+import '../services/voz_service.dart';
 import '../widgets/negocio_card.dart';
 import 'carrito_page.dart';
 
@@ -18,9 +19,13 @@ class CatalogoPage extends StatefulWidget {
 
 class _CatalogoPageState extends State<CatalogoPage> {
   final _service = NegocioService();
+  final _voz = VozService();
+  final _searchController = TextEditingController();
   late Future<List<Negocio>> _future;
   String _rubro = 'Todos';
   String _search = '';
+  String _textoReconocido = '';
+  bool _escuchando = false;
 
   @override
   void initState() {
@@ -28,7 +33,58 @@ class _CatalogoPageState extends State<CatalogoPage> {
     _future = _service.obtenerNegocios();
   }
 
+  @override
+  void dispose() {
+    _voz.dispose();
+    _searchController.dispose();
+    super.dispose();
+  }
+
   void _retry() => setState(() => _future = _service.obtenerNegocios());
+
+  Future<void> _alternarVoz() async {
+    if (_escuchando) {
+      await _voz.detener();
+      if (mounted) setState(() => _escuchando = false);
+      return;
+    }
+    try {
+      await _voz.comenzar(
+        onResultado: (texto, finalizado) {
+          if (!mounted) return;
+          setState(() {
+            _textoReconocido = texto;
+            _search = texto;
+            _searchController.value = TextEditingValue(
+              text: texto,
+              selection: TextSelection.collapsed(offset: texto.length),
+            );
+            if (finalizado) _escuchando = false;
+          });
+        },
+        onEstado: (estado) {
+          if (!mounted) return;
+          if (estado == 'listening') {
+            setState(() => _escuchando = true);
+          } else if (estado == 'done' || estado == 'notListening') {
+            setState(() => _escuchando = false);
+          }
+        },
+        onError: _mostrarErrorVoz,
+      );
+      if (mounted) setState(() => _escuchando = _voz.estaEscuchando);
+    } catch (error) {
+      _mostrarErrorVoz(error.toString());
+    }
+  }
+
+  void _mostrarErrorVoz(String mensaje) {
+    if (!mounted) return;
+    setState(() => _escuchando = false);
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(mensaje)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,13 +163,46 @@ class _CatalogoPageState extends State<CatalogoPage> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
                       child: TextField(
-                        decoration: const InputDecoration(
+                        controller: _searchController,
+                        decoration: InputDecoration(
                           prefixIcon: Icon(Icons.search),
                           labelText: 'Buscar en el menú',
+                          suffixIcon: IconButton(
+                            tooltip: _escuchando
+                                ? 'Detener búsqueda por voz'
+                                : 'Buscar por voz',
+                            onPressed: _alternarVoz,
+                            icon: Icon(
+                              _escuchando ? Icons.stop_circle : Icons.mic,
+                              color: _escuchando
+                                  ? Theme.of(context).colorScheme.error
+                                  : null,
+                            ),
+                          ),
                         ),
                         onChanged: (value) => setState(() => _search = value),
                       ),
                     ),
+                    if (_escuchando || _textoReconocido.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 2, 16, 6),
+                        child: Row(
+                          children: [
+                            Icon(
+                              _escuchando ? Icons.graphic_eq : Icons.mic_none,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                _escuchando
+                                    ? 'Escuchando...'
+                                    : 'Reconocido: “$_textoReconocido”',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     if (!SupabaseConfig.isConfigured)
                       const Padding(
                         padding: EdgeInsets.symmetric(

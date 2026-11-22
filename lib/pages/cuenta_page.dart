@@ -4,6 +4,7 @@ import '../config/supabase_config.dart';
 import '../core/validators.dart';
 import '../models/perfil.dart';
 import '../services/auth_service.dart';
+import 'foto_negocio_page.dart';
 import 'panel_pedidos_page.dart';
 
 class CuentaPage extends StatefulWidget {
@@ -187,6 +188,17 @@ class _CuentaPageState extends State<CuentaPage> {
                 icon: const Icon(Icons.admin_panel_settings_outlined),
                 label: const Text('Abrir panel del dueño'),
               ),
+            if (perfil.esDueno) ...[
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const FotoNegocioPage()),
+                ),
+                icon: const Icon(Icons.photo_camera_back_outlined),
+                label: const Text('Cambiar foto'),
+              ),
+            ],
             const SizedBox(height: 10),
             OutlinedButton.icon(
               onPressed: () async {

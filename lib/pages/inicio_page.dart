@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../core/app_colors.dart';
 import '../services/carrito_controller.dart';
+import '../services/storage_service.dart';
 import '../widgets/access_card.dart';
 import 'carrito_page.dart';
 import 'cuenta_page.dart';
@@ -81,42 +82,94 @@ class InicioPage extends StatelessWidget {
       Navigator.push(context, MaterialPageRoute(builder: (_) => page));
 }
 
-class _Banner extends StatelessWidget {
+class _Banner extends StatefulWidget {
   const _Banner();
 
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(24),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(24),
-      gradient: const LinearGradient(
-        colors: [AppColors.coal, Color(0xFF563024), AppColors.brand],
-      ),
-    ),
-    child: const Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Brasas del Oriente',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 27,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Parrilla, tradición y sabor cruceño.',
-                style: TextStyle(color: Colors.white70, fontSize: 16),
-              ),
-            ],
+  State<_Banner> createState() => _BannerState();
+}
+
+class _BannerState extends State<_Banner> {
+  final _storage = StorageService();
+  late Future<String?> _fotoFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _fotoFuture = _obtenerFoto();
+    StorageService.fotoVersion.addListener(_recargarFoto);
+  }
+
+  @override
+  void dispose() {
+    StorageService.fotoVersion.removeListener(_recargarFoto);
+    super.dispose();
+  }
+
+  void _recargarFoto() {
+    if (mounted) setState(() => _fotoFuture = _obtenerFoto());
+  }
+
+  Future<String?> _obtenerFoto() async {
+    try {
+      final config = await _storage.obtenerConfiguracion();
+      return _storage.urlPublica(config?.fotoPath);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => FutureBuilder<String?>(
+    future: _fotoFuture,
+    builder: (context, snapshot) {
+      final fotoUrl = snapshot.data;
+      return Container(
+        height: 176,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          gradient: const LinearGradient(
+            colors: [AppColors.coal, Color(0xFF563024), AppColors.brand],
           ),
+          image: fotoUrl == null
+              ? null
+              : DecorationImage(
+                  image: NetworkImage(fotoUrl),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withValues(alpha: 0.52),
+                    BlendMode.darken,
+                  ),
+                ),
         ),
-        Icon(Icons.outdoor_grill, color: AppColors.gold, size: 70),
-      ],
-    ),
+        child: const Row(
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Brasas del Oriente',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 27,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Parrilla, tradición y sabor cruceño.',
+                    style: TextStyle(color: Colors.white70, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.outdoor_grill, color: AppColors.gold, size: 70),
+          ],
+        ),
+      );
+    },
   );
 }

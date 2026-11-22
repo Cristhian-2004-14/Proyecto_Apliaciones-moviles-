@@ -13,11 +13,11 @@ Actividad de Aplicaciones Móviles I. Aplicación Flutter para el catálogo, con
 - Ubicación, clima de Santa Cruz con Open-Meteo, llamadas, WhatsApp, rutas y mapa OpenStreetMap.
 - Pruebas de carrito, clima, navegación y validadores.
 
-La siguiente etapa (Actividad 4) incorporará foto del negocio en Supabase Storage y búsqueda por voz.
+- Actividad 4: foto de portada en Supabase Storage, actualización exclusiva del dueño y búsqueda por voz en el catálogo.
 
 ## Ejecución
 
-Primero ejecuta en Supabase, desde SQL Editor, los scripts de la carpeta `supabase/` en el orden indicado en su README. Para contar con pedidos, cuentas, clima y ubicación ejecuta también `04_pedidos.sql`, `05_cuentas_roles.sql` y `06_ubicacion.sql`. Luego ejecuta:
+Primero ejecuta en Supabase, desde SQL Editor, los scripts de la carpeta `supabase/` en el orden indicado en su README. Para contar con pedidos, cuentas, clima y ubicación ejecuta también `04_pedidos.sql`, `05_cuentas_roles.sql` y `06_ubicacion.sql`. Para Actividad 4 ejecuta después `07_storage_negocio.sql`. Luego ejecuta:
 
 ```powershell
 flutter pub get
