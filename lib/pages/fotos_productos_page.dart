@@ -37,7 +37,9 @@ class _FotosProductosPageState extends State<FotosProductosPage> {
     try {
       await _storage.subirFotoProducto(productoId: producto.id, image: image);
       if (!mounted) return;
-      setState(() => _productosFuture = _negocios.obtenerNegocios());
+      setState(() {
+        _productosFuture = _negocios.obtenerNegocios();
+      });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Foto de ${producto.nombre} actualizada.')),
       );
@@ -78,9 +80,9 @@ class _FotosProductosPageState extends State<FotosProductosPage> {
         if (snapshot.hasError) {
           return Center(
             child: FilledButton(
-              onPressed: () => setState(
-                () => _productosFuture = _negocios.obtenerNegocios(),
-              ),
+              onPressed: () => setState(() {
+                _productosFuture = _negocios.obtenerNegocios();
+              }),
               child: const Text('Reintentar'),
             ),
           );
