@@ -7,6 +7,7 @@ create table if not exists public.negocios (
   descripcion text not null,
   telefono text not null check (telefono ~ '^[67][0-9]{7}$'),
   precio numeric(10,2) not null check (precio >= 0),
+  imagen_path text,
   created_at timestamptz not null default now()
 );
 

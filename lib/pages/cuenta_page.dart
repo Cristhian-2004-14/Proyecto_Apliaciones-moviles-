@@ -5,6 +5,7 @@ import '../core/validators.dart';
 import '../models/perfil.dart';
 import '../services/auth_service.dart';
 import 'foto_negocio_page.dart';
+import 'fotos_productos_page.dart';
 import 'configuracion_qr_page.dart';
 import 'panel_pedidos_page.dart';
 import 'verificacion_pagos_page.dart';
@@ -198,7 +199,16 @@ class _CuentaPageState extends State<CuentaPage> {
                   MaterialPageRoute(builder: (_) => const FotoNegocioPage()),
                 ),
                 icon: const Icon(Icons.photo_camera_back_outlined),
-                label: const Text('Cambiar foto'),
+                label: const Text('Cambiar foto de portada'),
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const FotosProductosPage()),
+                ),
+                icon: const Icon(Icons.photo_library_outlined),
+                label: const Text('Gestionar fotos de productos'),
               ),
               const SizedBox(height: 10),
               OutlinedButton.icon(

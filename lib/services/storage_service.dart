@@ -61,6 +61,34 @@ class StorageService {
     return urlPublica(path)!;
   }
 
+  Future<String> subirFotoProducto({
+    required int productoId,
+    required XFile image,
+  }) async {
+    final bytes = await image.readAsBytes();
+    _validarImagen(image, bytes);
+    final extension = _extension(image.name);
+    final path = 'productos/$productoId/foto.$extension';
+
+    await _client.storage
+        .from(bucket)
+        .uploadBinary(
+          path,
+          bytes,
+          fileOptions: FileOptions(
+            cacheControl: '3600',
+            upsert: true,
+            contentType: _contentType(extension),
+          ),
+        );
+    await _client
+        .from('negocios')
+        .update({'imagen_path': path})
+        .eq('id', productoId);
+    fotoVersion.value++;
+    return urlPublica(path)!;
+  }
+
   void _validarImagen(XFile image, Uint8List bytes) {
     final extension = _extension(image.name);
     const permitidas = {'jpg', 'jpeg', 'png', 'webp'};

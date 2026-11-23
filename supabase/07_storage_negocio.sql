@@ -58,7 +58,7 @@ to authenticated
 with check (
   bucket_id = 'negocios'
   and public.es_dueno()
-  and (storage.foldername(name))[1] = 'brasas-del-oriente'
+  and (storage.foldername(name))[1] in ('brasas-del-oriente', 'productos')
 );
 
 drop policy if exists "dueño actualiza foto negocio" on storage.objects;
@@ -69,7 +69,7 @@ using (bucket_id = 'negocios' and public.es_dueno())
 with check (
   bucket_id = 'negocios'
   and public.es_dueno()
-  and (storage.foldername(name))[1] = 'brasas-del-oriente'
+  and (storage.foldername(name))[1] in ('brasas-del-oriente', 'productos')
 );
 
 drop policy if exists "dueño elimina foto negocio" on storage.objects;
