@@ -5,6 +5,7 @@ import '../core/app_colors.dart';
 import '../core/validators.dart';
 import '../config/supabase_config.dart';
 import '../services/reserva_service.dart';
+import '../services/auth_service.dart';
 
 class ReservaPage extends StatefulWidget {
   const ReservaPage({super.key});
@@ -83,6 +84,14 @@ class _ReservaPageState extends State<ReservaPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Falta configurar Supabase para enviar la reserva.'),
+        ),
+      );
+      return;
+    }
+    if (AuthService().usuarioActual == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Inicia sesión para guardar y consultar tu reserva.'),
         ),
       );
       return;

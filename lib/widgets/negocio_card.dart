@@ -39,28 +39,68 @@ class NegocioCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Card(
-    child: ListTile(
-      contentPadding: const EdgeInsets.all(14),
-      leading: _imagen(),
-      title: Text(
-        negocio.nombre,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      subtitle: Text(negocio.descripcion),
-      trailing: Column(
-        mainAxisSize: MainAxisSize.min,
+    child: Padding(
+      padding: const EdgeInsets.all(14),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Bs. ${negocio.precio.toStringAsFixed(0)}',
-            style: const TextStyle(
-              color: AppColors.brand,
-              fontWeight: FontWeight.bold,
+          SizedBox(width: 64, height: 64, child: Center(child: _imagen())),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    negocio.nombre,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    negocio.descripcion,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
           ),
-          IconButton(
-            tooltip: 'Agregar al pedido',
-            onPressed: onAdd,
-            icon: const Icon(Icons.add_circle, color: AppColors.brand),
+          const SizedBox(width: 8),
+          SizedBox(
+            width: 52,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  'Bs. ${negocio.precio.toStringAsFixed(0)}',
+                  textAlign: TextAlign.end,
+                  style: const TextStyle(
+                    color: AppColors.brand,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                SizedBox(
+                  width: 44,
+                  height: 44,
+                  child: IconButton(
+                    tooltip: 'Agregar al pedido',
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints.tightFor(
+                      width: 44,
+                      height: 44,
+                    ),
+                    onPressed: onAdd,
+                    icon: const Icon(Icons.add_circle, color: AppColors.brand),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

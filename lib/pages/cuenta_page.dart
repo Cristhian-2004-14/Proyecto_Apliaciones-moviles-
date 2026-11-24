@@ -9,6 +9,8 @@ import 'fotos_productos_page.dart';
 import 'configuracion_qr_page.dart';
 import 'panel_pedidos_page.dart';
 import 'verificacion_pagos_page.dart';
+import 'mis_pedidos_reservas_page.dart';
+import 'gestion_reservas_page.dart';
 
 class CuentaPage extends StatefulWidget {
   const CuentaPage({super.key});
@@ -182,6 +184,17 @@ class _CuentaPageState extends State<CuentaPage> {
             const SizedBox(height: 8),
             Center(child: Text('Rol: ${perfil.esDueno ? 'Dueño' : 'Cliente'}')),
             const SizedBox(height: 24),
+            FilledButton.icon(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const MisPedidosReservasPage(),
+                ),
+              ),
+              icon: const Icon(Icons.history_outlined),
+              label: const Text('Mis pedidos y reservas'),
+            ),
+            const SizedBox(height: 10),
             if (perfil.esDueno)
               FilledButton.icon(
                 onPressed: () => Navigator.push(
@@ -231,6 +244,17 @@ class _CuentaPageState extends State<CuentaPage> {
                 ),
                 icon: const Icon(Icons.verified_user_outlined),
                 label: const Text('Verificación de pagos'),
+              ),
+              const SizedBox(height: 10),
+              OutlinedButton.icon(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const GestionReservasPage(),
+                  ),
+                ),
+                icon: const Icon(Icons.event_available_outlined),
+                label: const Text('Gestionar reservas'),
               ),
             ],
             const SizedBox(height: 10),
