@@ -141,7 +141,7 @@ class PagosService {
     final rows = await _client
         .from('pagos')
         .select(
-          'id,pedido_id,monto_esperado,estado,created_at,pedidos(nombre,telefono)',
+          'id,pedido_id,monto_esperado,estado,created_at,pedidos(nombre,telefono),configuracion_qr_pago(beneficiario,cuenta_destino)',
         )
         .order('created_at', ascending: false);
     return (rows as List)

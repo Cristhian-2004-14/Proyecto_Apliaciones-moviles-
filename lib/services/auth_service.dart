@@ -13,7 +13,7 @@ class AuthService {
   }) =>
       _client.auth.signInWithPassword(email: email.trim(), password: password);
 
-  Future<void> registrar({
+  Future<AuthResponse> registrar({
     required String nombre,
     required String email,
     required String password,

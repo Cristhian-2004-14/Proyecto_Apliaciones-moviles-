@@ -43,6 +43,9 @@ declare
   v_precio numeric(10,2);
   v_total numeric(10,2) := 0;
 begin
+  if auth.uid() is null then
+    raise exception 'Debes iniciar sesión para crear un pedido';
+  end if;
   if length(trim(coalesce(p_nombre, ''))) = 0 then
     raise exception 'El nombre es obligatorio';
   end if;
@@ -53,8 +56,8 @@ begin
     raise exception 'El pedido debe contener al menos un producto';
   end if;
 
-  insert into public.pedidos (nombre, telefono, total)
-  values (trim(p_nombre), trim(p_telefono), 0)
+  insert into public.pedidos (nombre, telefono, total, usuario_id)
+  values (trim(p_nombre), trim(p_telefono), 0, auth.uid())
   returning id into v_pedido_id;
 
   for v_item in select value from jsonb_array_elements(p_items)

@@ -208,27 +208,17 @@ class _DetallePagoPageState extends State<_DetallePagoPage> {
                 child: Text('Aún no se adjuntó ningún comprobante.'),
               ),
             ...proofs.map(
-              (proof) => Card(
-                child: ListTile(
-                  leading: const Icon(Icons.receipt_long_outlined),
-                  title: Text(
-                    proof.codigoOperacion ?? 'Sin código de operación',
-                  ),
-                  subtitle: Text(
-                    'Banco: ${proof.banco ?? 'No identificado'}\nMonto: ${proof.monto?.toStringAsFixed(2) ?? 'No identificado'}',
-                  ),
-                  isThreeLine: true,
-                  onTap: () async {
-                    final url = await _service.urlComprobanteFirmada(
-                      proof.ruta,
-                    );
-                    if (!context.mounted) return;
-                    await showDialog<void>(
-                      context: context,
-                      builder: (_) => Dialog(child: Image.network(url)),
-                    );
-                  },
-                ),
+              (proof) => _ComprobanteComparativo(
+                proof: proof,
+                pago: widget.pago,
+                onOpen: () async {
+                  final url = await _service.urlComprobanteFirmada(proof.ruta);
+                  if (!context.mounted) return;
+                  await showDialog<void>(
+                    context: context,
+                    builder: (_) => Dialog(child: Image.network(url)),
+                  );
+                },
               ),
             ),
             const SizedBox(height: 20),
@@ -250,4 +240,136 @@ class _DetallePagoPageState extends State<_DetallePagoPage> {
       },
     ),
   );
+}
+
+class _ComprobanteComparativo extends StatelessWidget {
+  const _ComprobanteComparativo({
+    required this.proof,
+    required this.pago,
+    required this.onOpen,
+  });
+
+  final ComprobantePago proof;
+  final PagoAdmin pago;
+  final VoidCallback onOpen;
+
+  String _text(String? value) =>
+      value == null || value.trim().isEmpty ? 'No identificado' : value;
+
+  String _date(DateTime? value) {
+    if (value == null) return 'No identificada';
+    return '${value.day.toString().padLeft(2, '0')}/${value.month.toString().padLeft(2, '0')}/${value.year}';
+  }
+
+  bool? _check(String key) => proof.validacion?[key] as bool?;
+
+  @override
+  Widget build(BuildContext context) => Card(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.receipt_long_outlined),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  proof.codigoOperacion ?? 'Sin código de operación',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              TextButton.icon(
+                onPressed: onOpen,
+                icon: const Icon(Icons.image_outlined),
+                label: const Text('Ver'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            'Comparación para revisión',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 6),
+          _FilaComparacion(
+            campo: 'Monto',
+            esperado: 'Bs. ${pago.montoEsperado.toStringAsFixed(2)}',
+            detectado: proof.monto == null
+                ? 'No identificado'
+                : 'Bs. ${proof.monto!.toStringAsFixed(2)}',
+            coincide: _check('monto_correcto'),
+          ),
+          _FilaComparacion(
+            campo: 'Cuenta destino',
+            esperado: _text(pago.cuentaDestinoEsperada),
+            detectado: _text(proof.cuentaDestino),
+            coincide: _check('cuenta_correcta'),
+          ),
+          _FilaComparacion(
+            campo: 'Beneficiario',
+            esperado: _text(pago.beneficiarioEsperado),
+            detectado: _text(proof.beneficiario),
+            coincide: _check('beneficiario_correcto'),
+          ),
+          _FilaComparacion(
+            campo: 'Fecha de operación',
+            esperado: 'Desde ${_date(pago.createdAt)}',
+            detectado: _date(proof.fechaOperacion),
+            coincide: _check('fecha_compatible'),
+          ),
+          _FilaComparacion(
+            campo: 'Operación',
+            esperado: 'Transferencia exitosa',
+            detectado: proof.exitoso == true ? 'Detectada como exitosa' : 'No confirmada por OCR',
+            coincide: _check('operacion_exitosa'),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+class _FilaComparacion extends StatelessWidget {
+  const _FilaComparacion({
+    required this.campo,
+    required this.esperado,
+    required this.detectado,
+    required this.coincide,
+  });
+
+  final String campo;
+  final String esperado;
+  final String detectado;
+  final bool? coincide;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = coincide == true
+        ? Colors.green
+        : coincide == false
+        ? Colors.red
+        : Colors.grey;
+    final icon = coincide == true
+        ? Icons.check_circle_outline
+        : coincide == false
+        ? Icons.error_outline
+        : Icons.help_outline;
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 20, color: color),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              '$campo\nEsperado: $esperado\nComprobante: $detectado',
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

@@ -26,13 +26,15 @@ class _MisPedidosReservasPageState extends State<MisPedidosReservasPage> {
   }
 
   Future<void> _recargarPedidos() async {
-    setState(() => _pedidosFuture = _service.obtenerPedidos());
-    await _pedidosFuture;
+    final future = _service.obtenerPedidos();
+    setState(() => _pedidosFuture = future);
+    await future;
   }
 
   Future<void> _recargarReservas() async {
-    setState(() => _reservasFuture = _service.obtenerReservas());
-    await _reservasFuture;
+    final future = _service.obtenerReservas();
+    setState(() => _reservasFuture = future);
+    await future;
   }
 
   @override
@@ -120,6 +122,7 @@ class _ListaPedidos extends StatelessWidget {
         itemBuilder: (context, index) {
           final pedido = pedidos[index];
           final pago = pedido.pago;
+          final estadoCliente = _estadoPedidoCliente(pago);
           return Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -146,23 +149,22 @@ class _ListaPedidos extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text('Pedido: ${_estadoPedido(pedido.estado)}'),
+                  Text('Estado del pedido: ${estadoCliente.label}'),
                   Text(
                     'Fecha: ${MaterialLocalizations.of(context).formatMediumDate(pedido.fecha)}',
                   ),
                   const SizedBox(height: 12),
                   _EstadoEtiqueta(
-                    icon: pago?.estado == EstadoPago.pagado
-                        ? Icons.verified_outlined
-                        : Icons.payments_outlined,
-                    texto: pago == null
-                        ? 'PAGO: AÚN NO INICIADO'
-                        : 'PAGO: ${pago.estado.label}',
-                    color: pago?.estado == EstadoPago.pagado
-                        ? Colors.green.shade800
-                        : pago?.estado == EstadoPago.rechazado
-                        ? Colors.red.shade800
-                        : AppColors.brand,
+                    icon: estadoCliente.icon,
+                    texto: 'PEDIDO: ${estadoCliente.label}',
+                    color: estadoCliente.color,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    pago == null
+                        ? 'Pago: aún no iniciado'
+                        : 'Revisión de pago: ${pago.estado.label}',
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
@@ -302,10 +304,38 @@ class _EstadoVacio extends StatelessWidget {
   );
 }
 
-String _estadoPedido(String estado) => switch (estado) {
-  'confirmado' => 'Confirmado',
-  'cancelado' => 'Cancelado',
-  _ => 'Pendiente',
-};
+class _EstadoPedidoCliente {
+  const _EstadoPedidoCliente({
+    required this.label,
+    required this.color,
+    required this.icon,
+  });
+
+  final String label;
+  final Color color;
+  final IconData icon;
+}
+
+_EstadoPedidoCliente _estadoPedidoCliente(Pago? pago) {
+  if (pago?.estado == EstadoPago.pagado) {
+    return _EstadoPedidoCliente(
+      label: 'CONFIRMADO',
+      color: Colors.green.shade800,
+      icon: Icons.check_circle_outline,
+    );
+  }
+  if (pago?.estado == EstadoPago.rechazado) {
+    return _EstadoPedidoCliente(
+      label: 'RECHAZADO',
+      color: Colors.red.shade800,
+      icon: Icons.cancel_outlined,
+    );
+  }
+  return const _EstadoPedidoCliente(
+    label: 'EN ESPERA',
+    color: AppColors.brand,
+    icon: Icons.hourglass_top_outlined,
+  );
+}
 
 String _horaCorta(String hora) => hora.length >= 5 ? hora.substring(0, 5) : hora;

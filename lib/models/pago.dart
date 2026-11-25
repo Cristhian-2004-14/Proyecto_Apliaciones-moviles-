@@ -69,13 +69,18 @@ class PagoAdmin extends Pago {
     required super.createdAt,
     this.cliente,
     this.telefono,
+    this.beneficiarioEsperado,
+    this.cuentaDestinoEsperada,
   });
 
   final String? cliente;
   final String? telefono;
+  final String? beneficiarioEsperado;
+  final String? cuentaDestinoEsperada;
 
   factory PagoAdmin.fromMap(Map<String, dynamic> map) {
     final pedido = map['pedidos'] as Map<String, dynamic>?;
+    final configuracion = map['configuracion_qr_pago'] as Map<String, dynamic>?;
     return PagoAdmin(
       id: map['id'].toString(),
       pedidoId: (map['pedido_id'] as num).toInt(),
@@ -84,6 +89,8 @@ class PagoAdmin extends Pago {
       createdAt: DateTime.parse(map['created_at'] as String).toLocal(),
       cliente: pedido?['nombre'] as String?,
       telefono: pedido?['telefono'] as String?,
+      beneficiarioEsperado: configuracion?['beneficiario'] as String?,
+      cuentaDestinoEsperada: configuracion?['cuenta_destino'] as String?,
     );
   }
 }

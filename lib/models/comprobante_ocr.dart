@@ -33,7 +33,11 @@ class ComprobantePago {
     required this.ruta,
     required this.createdAt,
     this.banco,
+    this.exitoso,
     this.monto,
+    this.fechaOperacion,
+    this.beneficiario,
+    this.cuentaDestino,
     this.codigoOperacion,
     this.validacion,
   });
@@ -43,7 +47,11 @@ class ComprobantePago {
   final String ruta;
   final DateTime createdAt;
   final String? banco;
+  final bool? exitoso;
   final double? monto;
+  final DateTime? fechaOperacion;
+  final String? beneficiario;
+  final String? cuentaDestino;
   final String? codigoOperacion;
   final Map<String, dynamic>? validacion;
 
@@ -53,7 +61,13 @@ class ComprobantePago {
     ruta: map['ruta'] as String,
     createdAt: DateTime.parse(map['created_at'] as String).toLocal(),
     banco: map['banco_detectado'] as String?,
+    exitoso: map['exitoso_detectado'] as bool?,
     monto: (map['monto_detectado'] as num?)?.toDouble(),
+    fechaOperacion: map['fecha_operacion'] == null
+        ? null
+        : DateTime.tryParse(map['fecha_operacion'].toString()),
+    beneficiario: map['beneficiario_detectado'] as String?,
+    cuentaDestino: map['cuenta_destino_detectada'] as String?,
     codigoOperacion: map['codigo_operacion'] as String?,
     validacion: map['validacion'] as Map<String, dynamic>?,
   );

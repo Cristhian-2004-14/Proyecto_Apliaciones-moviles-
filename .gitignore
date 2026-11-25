@@ -33,3 +33,15 @@ content.ndjson
 /entregables/*
 !/entregables/Taller_Actividad_02_Brasas_del_Oriente_completado.pptx
 !/entregables/Presentacion_video_Brasas_del_Oriente_Actividad_3_mejorada_final.pptx
+!/entregables/Documentacion_Final_Consolidada/
+/entregables/Documentacion_Final_Consolidada/*
+!/entregables/Documentacion_Final_Consolidada/01_Protocolo_UAT_y_Acta_de_Conformidad.docx
+!/entregables/Documentacion_Final_Consolidada/02_Pruebas_y_Evidencias_MVP.docx
+!/entregables/Documentacion_Final_Consolidada/03_Informe_Final_Brasas_del_Oriente_APA7.docx
+
+# Artefactos temporales de preparación de presentaciones y documentos
+.codex-build-defensa/
+.pptx-build-activity4/
+.qa_docs/
+.qa_guia_mvp/
+informe/__pycache__/

@@ -25,6 +25,7 @@ class _CuentaPageState extends State<CuentaPage> {
   final _nombre = TextEditingController();
   final _email = TextEditingController();
   final _password = TextEditingController();
+  final _confirmarPassword = TextEditingController();
   bool _registro = false;
   bool _enviando = false;
   late Future<Perfil?> _perfilFuture;
@@ -42,6 +43,7 @@ class _CuentaPageState extends State<CuentaPage> {
     _nombre.dispose();
     _email.dispose();
     _password.dispose();
+    _confirmarPassword.dispose();
     super.dispose();
   }
 
@@ -58,11 +60,23 @@ class _CuentaPageState extends State<CuentaPage> {
     setState(() => _enviando = true);
     try {
       if (_registro) {
-        await _service.registrar(
+        final response = await _service.registrar(
           nombre: _nombre.text,
           email: _email.text,
           password: _password.text,
         );
+        if (response.session == null) {
+          if (!mounted) return;
+          setState(() => _registro = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Cuenta creada. Confirma el correo enviado por Supabase antes de iniciar sesión.',
+              ),
+            ),
+          );
+          return;
+        }
       } else {
         await _service.iniciarSesion(
           email: _email.text,
@@ -83,11 +97,25 @@ class _CuentaPageState extends State<CuentaPage> {
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No se pudo completar la operación: $error')),
+        SnackBar(content: Text(_mensajeAuth(error))),
       );
     } finally {
       if (mounted) setState(() => _enviando = false);
     }
+  }
+
+  String _mensajeAuth(Object error) {
+    final detalle = error.toString().toLowerCase();
+    if (detalle.contains('invalid_credentials')) {
+      return 'Correo o contraseña incorrectos. Si acabas de crear la cuenta, revisa el correo de confirmación de Supabase.';
+    }
+    if (detalle.contains('email_not_confirmed')) {
+      return 'Debes confirmar el correo antes de iniciar sesión.';
+    }
+    if (detalle.contains('user_already_exists')) {
+      return 'Ese correo ya está registrado. Usa Ingresar con la contraseña original.';
+    }
+    return 'No se pudo completar la operación: $error';
   }
 
   @override
@@ -137,6 +165,19 @@ class _CuentaPageState extends State<CuentaPage> {
             validator: (value) =>
                 (value ?? '').length >= 6 ? null : 'Mínimo 6 caracteres.',
           ),
+          if (_registro) ...[
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _confirmarPassword,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: 'Confirmar contraseña',
+              ),
+              validator: (value) => value == _password.text
+                  ? null
+                  : 'Las contraseñas no coinciden.',
+            ),
+          ],
           const SizedBox(height: 24),
           FilledButton(
             onPressed: _enviando ? null : _enviar,
